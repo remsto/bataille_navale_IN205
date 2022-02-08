@@ -1,5 +1,13 @@
 package ensta.model.ship;
 
-public class BattleShip extends AbstractShip {
+import ensta.util.Orientation;
 
+public class BattleShip extends AbstractShip {
+    BattleShip(Orientation orientation) {
+        super('D', "BattleShip", 4, orientation);
+    }
+
+    BattleShip() {
+        super('D', "BattleShip", 4, Orientation.EAST);
+    }
 }
