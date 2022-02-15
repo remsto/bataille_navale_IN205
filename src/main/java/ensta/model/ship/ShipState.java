@@ -4,6 +4,10 @@ public class ShipState {
     private AbstractShip ship;
     private boolean struck;
 
+    public ShipState() {
+        this(null);
+    }
+
     public ShipState(AbstractShip ship) {
         this.ship = ship;
         this.struck = false;
@@ -11,6 +15,10 @@ public class ShipState {
 
     public boolean isStruck() {
         return struck;
+    }
+
+    public void setStruck(boolean struck) {
+        this.struck = struck;
     }
 
     @Override

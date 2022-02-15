@@ -1,5 +1,7 @@
 package ensta.model;
 
+import java.util.Arrays;
+
 import ensta.model.ship.AbstractShip;
 import ensta.model.ship.ShipState;
 import ensta.util.ColorUtil;
@@ -34,6 +36,8 @@ public class Board implements IBoard {
 		this.name = name;
 		this.size = size;
 		boats = new ShipState[size][size];
+		for (ShipState[] row : boats)
+			Arrays.fill(row, new ShipState());
 		hits = new Boolean[size][size];
 	}
 
@@ -42,21 +46,8 @@ public class Board implements IBoard {
 	}
 
 	public void print() {
-		System.out.println("Navires");
-		String first_row = " ";
-		for (int j = 0; j < boats[0].length; j++) {
-			first_row += " " + Character.toString(j + 65);
-		}
-		System.out.println(first_row);
-		for (int i = 0; i < boats.length; i++) {
-			String row_to_print = Integer.toString(i + 1);
-			for (int j = 0; j < boats[0].length; j++) {
-				row_to_print += " " + (boats[i][j] == null ? "." : boats[i][j]);
-			}
-			System.out.println(row_to_print);
-		}
 		System.out.println("\nFrappes");
-		first_row = " ";
+		String first_row = " ";
 		for (int j = 0; j < hits[0].length; j++) {
 			first_row += " " + Character.toString(j + 65);
 		}
@@ -69,6 +60,27 @@ public class Board implements IBoard {
 				else
 					row_to_print += " " + (hits[i][j] ? ColorUtil.colorize("X", ColorUtil.Color.RED)
 							: ColorUtil.colorize("X", ColorUtil.Color.WHITE));
+			}
+			System.out.println(row_to_print);
+		}
+		System.out.println("Navires");
+		first_row = " ";
+		for (int j = 0; j < boats[0].length; j++) {
+			first_row += " " + Character.toString(j + 65);
+		}
+		System.out.println(first_row);
+		for (int i = 0; i < boats.length; i++) {
+			String row_to_print = Integer.toString(i + 1);
+			for (int j = 0; j < boats[0].length; j++) {
+				if (boats[i][j].getShip() == null)
+					row_to_print += " "
+							+ (boats[i][j].isStruck() ? ColorUtil.colorize("X", ColorUtil.Color.WHITE) : ".");
+				else {
+					if (boats[i][j].isStruck())
+						row_to_print += " " + ColorUtil.colorize("X", ColorUtil.Color.RED);
+					else
+						row_to_print += " " + boats[i][j].getShip().getLabel();
+				}
 			}
 			System.out.println(row_to_print);
 		}
@@ -138,13 +150,12 @@ public class Board implements IBoard {
 
 	@Override
 	public boolean hasShip(Coords coords) {
-		return !(boats[coords.getY()][coords.getX()] == null);
+		return !(boats[coords.getY()][coords.getX()].getShip() == null);
 	}
 
 	@Override
 	public void setHit(boolean hit, Coords coords) {
 		hits[coords.getY()][coords.getX()] = hit;
-		boats[coords.getY()][coords.getX()] = null;
 	}
 
 	@Override
@@ -154,7 +165,25 @@ public class Board implements IBoard {
 
 	@Override
 	public Hit sendHit(Coords res) {
-		// TODO Auto-generated method stub
-		return null;
+		if (res.getX() < 0 || res.getX() >= this.size || res.getY() < 0 || res.getY() >= this.size) {
+			System.out.println("Les coordonnées doivent être valides !");
+			return null;
+		}
+		if (hasShip(res)) {
+			ShipState current_ship_state = boats[res.getY()][res.getX()];
+			if (!current_ship_state.isStruck()) {
+				current_ship_state.getShip().addStrike();
+				current_ship_state.setStruck(true);
+			} else {
+				System.out.println("Il faut viser une case qui n'a pas déjà été attaquée !");
+				return null;
+			}
+			if (current_ship_state.getShip().isSunk())
+				return Hit.valueOf(current_ship_state.getShip().getName().toUpperCase());
+			else
+				return Hit.STRIKE;
+		} else {
+			return Hit.MISS;
+		}
 	}
 }
