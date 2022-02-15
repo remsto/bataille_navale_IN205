@@ -160,7 +160,7 @@ public class Board implements IBoard {
 
 	@Override
 	public Boolean getHit(Coords coords) {
-		return hits[coords.getX()][coords.getY()];
+		return hits[coords.getY()][coords.getX()];
 	}
 
 	@Override
