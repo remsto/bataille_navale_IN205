@@ -16,6 +16,10 @@ public class AbstractShip {
         this.orientation = orientation;
     }
 
+    public Character getLabel() {
+        return label;
+    }
+
     public boolean isSunk() {
         return false;
     }

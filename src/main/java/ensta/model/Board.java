@@ -25,7 +25,7 @@ public class Board implements IBoard {
 	}
 
 	public Board() {
-		this("default_name", 10);
+		this("default_name", DEFAULT_SIZE);
 	}
 
 	public Board(String name, int size) {
@@ -71,6 +71,9 @@ public class Board implements IBoard {
 	public boolean canPutShip(AbstractShip ship, Coords coords) {
 		Orientation o = ship.getOrientation();
 		int dx = 0, dy = 0;
+		if (coords.getX() + 1 > this.size || coords.getY() + 1 > this.size || coords.getX() + 1 <= 0
+				|| coords.getY() + 1 <= 0)
+			return false;
 		if (o == Orientation.EAST) {
 			if (coords.getX() + ship.getLength() >= this.size) {
 				return false;
@@ -113,26 +116,32 @@ public class Board implements IBoard {
 
 	@Override
 	public boolean putShip(AbstractShip ship, Coords coords) {
-		// TODO Auto-generated method stub
-		return false;
+		if (canPutShip(ship, coords)) {
+			if (ship.getOrientation() == Orientation.EAST || ship.getOrientation() == Orientation.WEST)
+				for (int j = 0; j < ship.getLength(); j = j + ship.getOrientation().getIncrement())
+					boats[coords.getY() - 1][coords.getX() + j - 1] = ship.getLabel();
+			else
+				for (int i = 0; i < ship.getLength(); i = i + ship.getOrientation().getIncrement())
+					boats[coords.getY() + i - 1][coords.getX() - 1] = ship.getLabel();
+			return true;
+		} else
+			return false;
 	}
 
 	@Override
 	public boolean hasShip(Coords coords) {
-		// TODO Auto-generated method stub
-		return false;
+		return !(boats[coords.getY()][coords.getX()] == null);
 	}
 
 	@Override
 	public void setHit(boolean hit, Coords coords) {
-		// TODO Auto-generated method stub
-
+		hits[coords.getY()][coords.getX()] = hit;
+		boats[coords.getY()][coords.getX()] = null;
 	}
 
 	@Override
 	public Boolean getHit(Coords coords) {
-		// TODO Auto-generated method stub
-		return null;
+		return hits[coords.getX()][coords.getY()];
 	}
 
 	@Override
