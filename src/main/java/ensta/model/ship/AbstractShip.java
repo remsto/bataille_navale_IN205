@@ -8,20 +8,26 @@ public class AbstractShip {
     private String name;
     private int length;
     private Orientation orientation;
+    private int strikeCount;
 
     public AbstractShip(Character label, String name, int length, Orientation orientation) {
         this.label = label;
         this.name = name;
         this.length = length;
         this.orientation = orientation;
+        this.strikeCount = 0;
     }
+
+    public void addStrike() {
+        strikeCount++;
+    };
 
     public Character getLabel() {
         return label;
     }
 
     public boolean isSunk() {
-        return false;
+        return (strikeCount >= length);
     }
 
     public String getName() {

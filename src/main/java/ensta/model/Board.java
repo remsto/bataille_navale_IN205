@@ -1,6 +1,8 @@
 package ensta.model;
 
 import ensta.model.ship.AbstractShip;
+import ensta.model.ship.ShipState;
+import ensta.util.ColorUtil;
 import ensta.util.Orientation;
 
 public class Board implements IBoard {
@@ -8,19 +10,19 @@ public class Board implements IBoard {
 	private static final int DEFAULT_SIZE = 10;
 
 	private String name;
-	private Character[][] boats;
-	private boolean[][] hits;
+	private ShipState[][] boats;
+	private Boolean[][] hits;
 	private int size;
 
 	public String getName() {
 		return name;
 	}
 
-	public Character[][] getBoats() {
+	public ShipState[][] getBoats() {
 		return boats;
 	}
 
-	public boolean[][] getHits() {
+	public Boolean[][] getHits() {
 		return hits;
 	}
 
@@ -31,8 +33,8 @@ public class Board implements IBoard {
 	public Board(String name, int size) {
 		this.name = name;
 		this.size = size;
-		boats = new Character[size][size];
-		hits = new boolean[size][size];
+		boats = new ShipState[size][size];
+		hits = new Boolean[size][size];
 	}
 
 	public Board(String name) {
@@ -62,7 +64,11 @@ public class Board implements IBoard {
 		for (int i = 0; i < hits.length; i++) {
 			String row_to_print = Integer.toString(i + 1);
 			for (int j = 0; j < hits[0].length; j++) {
-				row_to_print += " " + (hits[i][j] ? "x" : ".");
+				if (hits[i][j] == null)
+					row_to_print += " " + ".";
+				else
+					row_to_print += " " + (hits[i][j] ? ColorUtil.colorize("X", ColorUtil.Color.RED)
+							: ColorUtil.colorize("X", ColorUtil.Color.WHITE));
 			}
 			System.out.println(row_to_print);
 		}
