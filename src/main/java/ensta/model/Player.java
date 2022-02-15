@@ -37,19 +37,26 @@ public class Player {
 	public void putShips() {
 		boolean done = false;
 		int i = 0;
-
 		do {
 			AbstractShip ship = ships[i];
 			String msg = String.format("placer %d : %s(%d)", i + 1, ship.getName(), ship.getLength());
 			System.out.println(msg);
 			InputHelper.ShipInput res = InputHelper.readShipInput();
-			// TODO set ship orientation
-			// TODO put ship at given position
-			// TODO when ship placement successful
+			if (res.orientation.equals("north"))
+				ship.setOrientation(Orientation.NORTH);
+			else if (res.orientation.equals("south"))
+				ship.setOrientation(Orientation.SOUTH);
+			else if (res.orientation.equals("west"))
+				ship.setOrientation(Orientation.WEST);
+			else if (res.orientation.equals("east"))
+				ship.setOrientation(Orientation.EAST);
+			boolean could_put_ship = board.putShip(ship, new Coords(res.x, res.y));
+			if (!could_put_ship)
+				System.err.println("Mauvaises coordonnées ! Hors de la carte ou collision avec un autre bateau !");
+			else
+				board.print();
 			++i;
 			done = i == 5;
-
-			board.print();
 		} while (!done);
 	}
 

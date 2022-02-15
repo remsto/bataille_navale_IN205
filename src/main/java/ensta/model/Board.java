@@ -71,26 +71,26 @@ public class Board implements IBoard {
 	public boolean canPutShip(AbstractShip ship, Coords coords) {
 		Orientation o = ship.getOrientation();
 		int dx = 0, dy = 0;
-		if (coords.getX() + 1 > this.size || coords.getY() + 1 > this.size || coords.getX() + 1 <= 0
-				|| coords.getY() + 1 <= 0)
+		if (coords.getX() >= this.size || coords.getY() >= this.size || coords.getX() < 0
+				|| coords.getY() < 0)
 			return false;
 		if (o == Orientation.EAST) {
-			if (coords.getX() + ship.getLength() >= this.size) {
+			if (coords.getX() + ship.getLength() > this.size) {
 				return false;
 			}
 			dx = 1;
 		} else if (o == Orientation.SOUTH) {
-			if (coords.getY() + ship.getLength() >= this.size) {
+			if (coords.getY() + ship.getLength() > this.size) {
 				return false;
 			}
 			dy = 1;
 		} else if (o == Orientation.NORTH) {
-			if (coords.getY() + 1 - ship.getLength() < 0) {
+			if (coords.getY() - ship.getLength() < 0) {
 				return false;
 			}
 			dy = -1;
 		} else if (o == Orientation.WEST) {
-			if (coords.getX() + 1 - ship.getLength() < 0) {
+			if (coords.getX() - ship.getLength() < 0) {
 				return false;
 			}
 			dx = -1;
@@ -118,11 +118,13 @@ public class Board implements IBoard {
 	public boolean putShip(AbstractShip ship, Coords coords) {
 		if (canPutShip(ship, coords)) {
 			if (ship.getOrientation() == Orientation.EAST || ship.getOrientation() == Orientation.WEST)
-				for (int j = 0; j < ship.getLength(); j = j + ship.getOrientation().getIncrement())
-					boats[coords.getY() - 1][coords.getX() + j - 1] = ship.getLabel();
+				for (int j = 0; j < ship.getLength()
+						&& j > -ship.getLength(); j = j + ship.getOrientation().getIncrement())
+					boats[coords.getY()][coords.getX() + j] = ship.getLabel();
 			else
-				for (int i = 0; i < ship.getLength(); i = i + ship.getOrientation().getIncrement())
-					boats[coords.getY() + i - 1][coords.getX() - 1] = ship.getLabel();
+				for (int i = 0; i < ship.getLength()
+						&& i > -ship.getLength(); i = i + ship.getOrientation().getIncrement())
+					boats[coords.getY() + i][coords.getX()] = ship.getLabel();
 			return true;
 		} else
 			return false;
