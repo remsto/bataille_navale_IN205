@@ -36,8 +36,11 @@ public class Board implements IBoard {
 		this.name = name;
 		this.size = size;
 		boats = new ShipState[size][size];
-		for (ShipState[] row : boats)
-			Arrays.fill(row, new ShipState());
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				boats[i][j] = new ShipState();
+			}
+		}
 		hits = new Boolean[size][size];
 	}
 
@@ -183,6 +186,7 @@ public class Board implements IBoard {
 			else
 				return Hit.STRIKE;
 		} else {
+			boats[res.getY()][res.getX()].setStruck(true);
 			return Hit.MISS;
 		}
 	}

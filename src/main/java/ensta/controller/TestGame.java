@@ -31,12 +31,14 @@ public class TestGame {
         ai.putShips(ships);
         int nbDetruit = 0;
         Coords coords = new Coords();
-        while (nbDetruit != 10) {
+        while (nbDetruit != 5) {
             Hit hitOutput = ai.sendHit(coords);
             System.out.println("Tir en " + coords.toString() + " : " + hitOutput.toString());
-            
+            if (hitOutput != Hit.MISS && hitOutput != Hit.STRIKE) {
+                nbDetruit++;
+            }
             board.print();
-            sleep(1000);
+            // sleep(500);
         }
     }
 }
