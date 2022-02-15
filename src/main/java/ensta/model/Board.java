@@ -126,11 +126,11 @@ public class Board implements IBoard {
 			if (ship.getOrientation() == Orientation.EAST || ship.getOrientation() == Orientation.WEST)
 				for (int j = 0; j < ship.getLength()
 						&& j > -ship.getLength(); j = j + ship.getOrientation().getIncrement())
-					boats[coords.getY()][coords.getX() + j] = ship.getLabel();
+					boats[coords.getY()][coords.getX() + j] = new ShipState(ship);
 			else
 				for (int i = 0; i < ship.getLength()
 						&& i > -ship.getLength(); i = i + ship.getOrientation().getIncrement())
-					boats[coords.getY() + i][coords.getX()] = ship.getLabel();
+					boats[coords.getY() + i][coords.getX()] = new ShipState(ship);
 			return true;
 		} else
 			return false;
