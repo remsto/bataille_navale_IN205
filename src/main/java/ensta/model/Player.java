@@ -72,13 +72,11 @@ public class Player {
 			if (hitOutput != null) {
 				System.out.println(hitOutput);
 				coords.setCoords(new Coords(hitInput.x, hitInput.y));
-				board.setHit(true, coords);
 				return hitOutput;
 			} else {
 				System.out.println("Problème avec le tir, veuillez le refaire");
 			}
 		} while (!done);
-
 		return hit;
 	}
 

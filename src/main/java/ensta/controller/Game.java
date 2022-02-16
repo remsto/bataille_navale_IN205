@@ -2,10 +2,12 @@ package ensta.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import ensta.ai.PlayerAI;
 import ensta.model.Board;
 import ensta.model.Coords;
 import ensta.model.Hit;
@@ -39,13 +41,23 @@ public class Game {
 
 	public Game init() {
 		if (!loadSave()) {
-
-
 			// TODO init boards
+			Board board1 = new Board();
+			Board board2 = new Board();
+			List<AbstractShip> ships = new ArrayList<AbstractShip>();
+			ships.add(new Destroyer());
+			ships.add(new BattleShip());
+			ships.add(new Carrier());
+			ships.add(new Submarine());
+			ships.add(new Submarine());
 
 			// TODO init this.player1 & this.player2
+			this.player1 = new Player(board1, board2, ships);
+			this.player2 = new PlayerAI(board2, board1, ships);
 
 			// TODO place player ships
+			player1.putShips();
+			player2.putShips();
 		}
 		return this;
 	}
@@ -62,8 +74,9 @@ public class Game {
 		b1.print();
 		boolean done;
 		do {
-			hit = Hit.MISS; // TODO player1 send a hit
+			hit = player1.sendHit(coords); // TODO player1 send a hit
 			boolean strike = hit != Hit.MISS; // TODO set this hit on his board (b1)
+			b1.setHit(strike, coords);
 
 			done = updateScore();
 			b1.print();
@@ -73,7 +86,7 @@ public class Game {
 
 			if (!done && !strike) {
 				do {
-					hit = Hit.MISS; // TODO player2 send a hit.
+					hit = player2.sendHit(coords); // TODO player2 send a hit.
 
 					strike = hit != Hit.MISS;
 					if (strike) {
@@ -83,7 +96,7 @@ public class Game {
 					done = updateScore();
 
 					if (!done) {
-//						save();
+						// save();
 					}
 				} while (strike && !done);
 			}
@@ -96,29 +109,29 @@ public class Game {
 	}
 
 	private void save() {
-//		try {
-//			// TODO bonus 2 : uncomment
-//			// if (!SAVE_FILE.exists()) {
-//			// SAVE_FILE.getAbsoluteFile().getParentFile().mkdirs();
-//			// }
-//
-//			// TODO bonus 2 : serialize players
-//
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		// try {
+		// // TODO bonus 2 : uncomment
+		// // if (!SAVE_FILE.exists()) {
+		// // SAVE_FILE.getAbsoluteFile().getParentFile().mkdirs();
+		// // }
+		//
+		// // TODO bonus 2 : serialize players
+		//
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
 	}
 
 	private boolean loadSave() {
-//		if (SAVE_FILE.exists()) {
-//			try {
-//				// TODO bonus 2 : deserialize players
-//
-//				return true;
-//			} catch (IOException | ClassNotFoundException e) {
-//				e.printStackTrace();
-//			}
-//		}
+		// if (SAVE_FILE.exists()) {
+		// try {
+		// // TODO bonus 2 : deserialize players
+		//
+		// return true;
+		// } catch (IOException | ClassNotFoundException e) {
+		// e.printStackTrace();
+		// }
+		// }
 		return false;
 	}
 
@@ -144,16 +157,16 @@ public class Game {
 		String msg;
 		ColorUtil.Color color = ColorUtil.Color.RESET;
 		switch (hit) {
-		case MISS:
-			msg = hit.toString();
-			break;
-		case STRIKE:
-			msg = hit.toString();
-			color = ColorUtil.Color.RED;
-			break;
-		default:
-			msg = hit.toString() + " coulé";
-			color = ColorUtil.Color.RED;
+			case MISS:
+				msg = hit.toString();
+				break;
+			case STRIKE:
+				msg = hit.toString();
+				color = ColorUtil.Color.RED;
+				break;
+			default:
+				msg = hit.toString() + " coulé";
+				color = ColorUtil.Color.RED;
 		}
 		msg = String.format("%s Frappe en %c%d : %s", incoming ? "<=" : "=>", ((char) ('A' + coords.getX())),
 				(coords.getY() + 1), msg);

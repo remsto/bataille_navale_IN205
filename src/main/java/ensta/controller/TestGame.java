@@ -38,7 +38,7 @@ public class TestGame {
                 nbDetruit++;
             }
             board.print();
-            // sleep(500);
+            sleep(500);
         }
     }
 }

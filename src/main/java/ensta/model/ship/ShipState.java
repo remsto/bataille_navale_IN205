@@ -2,7 +2,7 @@ package ensta.model.ship;
 
 public class ShipState {
     private AbstractShip ship;
-    public boolean struck;
+    public Boolean struck;
 
     public ShipState() {
         this(null);
